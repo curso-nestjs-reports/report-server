@@ -1,9 +1,7 @@
-import { Response } from 'express';
-import { Controller, Get, Param, Res } from '@nestjs/common';
-
-import { handleResponse } from 'src/helpers';
+import { Controller, Get, Param } from '@nestjs/common';
 
 import { BasicReportService } from './basic-report.service';
+import { PdfResponse } from 'src/common/decorators';
 
 @Controller('basic-report')
 export class BasicReportController {
@@ -14,19 +12,15 @@ export class BasicReportController {
     return await this.basicReportService.findMany();
   }
 
+  @PdfResponse()
   @Get('hello')
-  getHelloPdf(@Res() response: Response) {
-    return handleResponse(response, this.basicReportService.getHelloPdf());
+  getHelloPdf() {
+    return this.basicReportService.getHelloPdf();
   }
 
+  @PdfResponse()
   @Get('employment-letter/:employeeId')
-  getEmploymentLetterPdfByemployeeId(
-    @Res() response: Response,
-    @Param('employeeId') employeeId: string,
-  ) {
-    return handleResponse(
-      response,
-      this.basicReportService.getEmploymentLetterPdfById(+employeeId),
-    );
+  getEmploymentLetterPdfByemployeeId(@Param('employeeId') employeeId: string) {
+    return this.basicReportService.getEmploymentLetterPdfById(+employeeId);
   }
 }
